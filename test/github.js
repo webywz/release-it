@@ -576,6 +576,21 @@ describe('github', () => {
     );
   });
 
+  test('should use github.host in release URL fallback', async () => {
+    const options = {
+      github: {
+        pushRepo: 'ssh://git@ssh.github.com:443/user/repo.git',
+        host: 'github.com'
+      }
+    };
+    const github = await factory(GitHub, { options });
+    // Simulate repo context still carrying an alternate SSH host (pre-normalization / GHES mismatch)
+    github.setContext({
+      repo: { host: 'ssh.github.com', owner: 'user', project: 'repo', repository: 'user/repo' }
+    });
+    assert.equal(github.getReleaseUrlFallback('v1.2.3'), 'https://github.com/user/repo/releases/tag/v1.2.3');
+  });
+
   test('should generate GitHub web release url for enterprise host', async t => {
     const options = {
       git,

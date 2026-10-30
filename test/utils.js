@@ -57,6 +57,15 @@ test('parseGitUrl', () => {
     repository: 'org/example.com'
   });
 
+  assert.deepEqual(parseGitUrl('ssh://git@ssh.github.com:443/owner/repo.git'), {
+    host: 'github.com',
+    owner: 'owner',
+    project: 'repo',
+    protocol: 'ssh',
+    remote: 'ssh://git@ssh.github.com:443/owner/repo.git',
+    repository: 'owner/repo'
+  });
+
   assert.deepEqual(parseGitUrl('file://Users/john/doe/owner/project'), {
     host: 'users',
     owner: 'owner',
